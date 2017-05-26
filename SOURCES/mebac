@@ -1,0 +1,52 @@
+#!/bin/bash
+
+. /var/lib/mebac/mebac.conf
+
+target_pic_dir='photos'
+target_vid_dir='videos'
+logging='true'
+
+[ "${src_dirs}" -o "${target_dir}" ] || { echo "Media Backup not configured. Please run mebac-config to configure."; exit -1; }
+
+i=1
+sp="/-\|"
+echo -n ' '
+c=0
+for dir in $src_dirs
+do
+        [ "${logging}" ] && logger "Processing files in $dir"
+        for pic in $dir/*
+        do
+                c=$((c + 1))
+                mtype=$(exiftool -mimeType "${pic}" |awk -F'[:/]' '{print $2}' | sed -e 's/ //g')
+                ym=( $(exiftool -DateTimeOriginal -createDate -GPSDateStamp "${pic}" | awk -F':' '{print $2"/"$3}' | sed -e 's/ //g') )
+                if [ "${mtype}" = "image" ]
+                then
+                        newpic=${pic##*/}
+                        [ ! -d "${target_dir}/${target_pic_dir}/${ym}" ] && mkdir -p "${target_dir}/${target_pic_dir}/${ym}"
+                        if [ "$(cp -uv "${pic}" "${target_dir}/${target_pic_dir}/${ym}/")" != "" ]
+                        then
+                                printf "\b${sp:i++%${#sp}:1}"
+                                [ "${logging}" ] && logger "Moving photo ${pic} to ${target_dir}/${target_pic_dir}/${ym}"
+                                cmp --silent "${pic}" "${target_dir}/${target_pic_dir}/${ym}/${newpic}" && rm -rf "${pic}"
+                        else
+                                [ "${logging}" ] && logger "File ${pic} not processed. Newer file already exists?"
+                                cmp --silent "${pic}" "${target_dir}/${target_pic_dir}/${ym}/${newpic}" && rm -rf "${pic}"
+                        fi
+                elif [ "$mtype" = "video" ]
+                then
+                        newpic=${pic##*/}
+                        [ ! -d "${target_dir}/${target_vid_dir}/${ym}" ] && mkdir -p "${target_dir}/${target_vid_dir}/${ym}"
+                        if [ "$(cp -uv "${pic}" "${target_dir}/${target_vid_dir}/${ym}/")" != "" ]
+                        then
+                                printf "\b${sp:i++%${#sp}:1}"
+                                [ "${logging}" ] && logger "Moving video ${pic} to ${target_dir}/${target_vid_dir}/${ym}"
+                                cmp --silent "${pic}" "${target_dir}/${target_vid_dir}/${ym}/${newpic}" && rm -rf "${pic}"
+                        else
+                                [ "${logging}" ] && logger "File ${pic} not processed. Newer file already exists?"
+                                cmp --silent "${pic}" "${target_dir}/${target_vid_dir}/${ym}/${newpic}" && rm -rf "${pic}"
+                        fi
+                fi
+        done
+        [ "${logging}" ] && logger "Processed $c files"
+done
