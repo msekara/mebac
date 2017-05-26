@@ -1,0 +1,23 @@
+#!/bin/bash
+
+. /var/lib/mebac/mebac.conf
+
+[ "${src_dirs}" -o "${target_dir}" ] && echo -e "\nThe utility is already configured.\nChanges will overwrite current configuration.\n\nDo you wish to continue?" || echo "Configure mebac?"
+
+config_mebac ()
+{
+        echo -n "Enter full path to media source directories (space delimited): "
+        read src_dirs
+        echo -n "Enter target directory for backup: "
+        read target_dir
+
+        echo -e "src_dirs='$src_dirs'\ntarget_dir='$target_dir'" > /var/lib/mebac/mebac.conf
+}
+
+select yn in Yes No
+do
+        case $yn in
+                Yes ) config_mebac; break;;
+                No ) exit;;
+        esac
+done
