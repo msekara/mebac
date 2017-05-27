@@ -4,7 +4,7 @@ Name:      mebac
 Version:   1.0
 Release:   0
 Summary:   Media Backup
-License:   GPL
+License:   MIT
 Group:     Multimedia
 Buildarch: noarch
 Requires:  perl-Image-ExifTool
