@@ -5,6 +5,7 @@
 target_pic_dir='photos'
 target_vid_dir='videos'
 logging='true'
+remove_src=''
 
 [ "${src_dirs}" -o "${target_dir}" ] || { echo "Media Backup not configured. Please run mebac-config to configure."; exit -1; }
 
@@ -28,10 +29,10 @@ do
                         then
                                 printf "\b${sp:i++%${#sp}:1}"
                                 [ "${logging}" ] && logger "Moving photo ${pic} to ${target_dir}/${target_pic_dir}/${ym}"
-                                cmp --silent "${pic}" "${target_dir}/${target_pic_dir}/${ym}/${newpic}" && rm -rf "${pic}"
+                                [ "${remove_src}" ] && cmp --silent "${pic}" "${target_dir}/${target_pic_dir}/${ym}/${newpic}" && rm -rf "${pic}"
                         else
                                 [ "${logging}" ] && logger "File ${pic} not processed. Newer file already exists?"
-                                cmp --silent "${pic}" "${target_dir}/${target_pic_dir}/${ym}/${newpic}" && rm -rf "${pic}"
+                                [ "${remove_src}" ] && cmp --silent "${pic}" "${target_dir}/${target_pic_dir}/${ym}/${newpic}" && rm -rf "${pic}"
                         fi
                 elif [ "$mtype" = "video" ]
                 then
@@ -41,10 +42,10 @@ do
                         then
                                 printf "\b${sp:i++%${#sp}:1}"
                                 [ "${logging}" ] && logger "Moving video ${pic} to ${target_dir}/${target_vid_dir}/${ym}"
-                                cmp --silent "${pic}" "${target_dir}/${target_vid_dir}/${ym}/${newpic}" && rm -rf "${pic}"
+                                [ "${remove_src}" ] && cmp --silent "${pic}" "${target_dir}/${target_vid_dir}/${ym}/${newpic}" && rm -rf "${pic}"
                         else
                                 [ "${logging}" ] && logger "File ${pic} not processed. Newer file already exists?"
-                                cmp --silent "${pic}" "${target_dir}/${target_vid_dir}/${ym}/${newpic}" && rm -rf "${pic}"
+                                [ "${remove_src}" ] && cmp --silent "${pic}" "${target_dir}/${target_vid_dir}/${ym}/${newpic}" && rm -rf "${pic}"
                         fi
                 fi
         done
