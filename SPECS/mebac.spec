@@ -2,9 +2,9 @@
 
 Name:      mebac
 Version:   1.0
-Release:   0
+Release:   9
 Summary:   Media Backup
-License:   MIT
+License:   GPL
 Group:     Multimedia
 Buildarch: noarch
 Requires:  perl-Image-ExifTool
@@ -31,5 +31,29 @@ cp -r %{SOURCE2} %{buildroot}/var/lib/%{name}/
 %config /var/lib/%{name}/mebac.conf
 
 %changelog
-* Thu Feb 26 2015 Mladen Sekara <mladen.sekara@emefes.com> 1.0-0
+* Wed Oct 31 2018 Mladen Sekara <mladen.sekara@emefes.com> 1.0-9
+- Added support for multilevel source directory.
+
+* Thu May 25 2017 Mladen Sekara <mladen.sekara@emefes.com> 1.0-8
+- Added brackets around each var for consistency.
+
+* Sun May 21 2017 Mladen Sekara <mladen.sekara@emefes.com> 1.0-7
+- Simplified the date extraction and changed logging to optional.
+
+* Mon May 17 2017 Mladen Sekara <mladen.sekara@emefes.com> 1.0-6
+- Fixed issue with date detection
+
+* Mon May 15 2017 Mladen Sekara <mladen.sekara@emefes.com> 1.0-5
+- Added Date/Time Original to complement createDate and GPSDateStamp
+
+* Wed Nov 03 2016 Mladen Sekara <mladen.sekara@emefes.com> 1.0-4
+- If createDate is empty, source date from GPS
+
+* Thu Oct 06 2016 Mladen Sekara <mladen.sekara@emefes.com> 1.0-3
+- Added double quotes around $pic.
+
+* Thu Jun 05 2014 Mladen Sekara <mladen.sekara@emefes.com> 1.0-2
+- Added copy check.
+
+* Fri Apr 04 2014 Mladen Sekara <mladen.sekara@emefes.com> 1.0-1
 - Initial release.
